@@ -1,21 +1,32 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQuickView>
 
-#include <filament/FilamentAPI.h>
-#include <filament/Engine.h>
+#include "qfilamentitem.h"
+#include "qfilament.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url);
+#ifdef __APPLE__
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::MetalRhi);
+#endif
+
+#ifdef _WIN32
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+#endif
+
+#ifdef __linux__
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+#endif
+
+    QQuickView view;
+    view.setResizeMode(QQuickView::SizeRootObjectToView);
+    view.setSource(QUrl("qrc:/main.qml"));
+    view.show();
+
+    const auto qfilament = QFilament(static_cast<QQuickWindow*>(&view), view.rootObject()->findChildren<QFilamentItem*>());
 
     return app.exec();
 }
