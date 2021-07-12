@@ -6,9 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
-
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
@@ -20,9 +17,5 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-//    filament::Engine *f_engine = filament::Engine::create();
-//    f_engine->destroy(&f_engine);
-
     return app.exec();
-//    return 0;
 }
