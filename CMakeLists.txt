@@ -16,8 +16,8 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
-find_package(OpenGL REQUIRED)
 find_package(filament REQUIRED)
+find_package(OpenGL REQUIRED)
 find_package(Threads REQUIRED)
 
 add_executable(qml_filament
