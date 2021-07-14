@@ -37,7 +37,7 @@ add_executable(qml_filament
 target_compile_definitions(qml_filament
     PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 target_link_libraries(qml_filament
-    Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick filament::filament Threads::Threads)
+    Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick filament::filament Threads::Threads opengl32)
 
 set_target_properties(qml_filament PROPERTIES
     QT_QML_MODULE_VERSION 1.0

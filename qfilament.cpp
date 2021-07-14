@@ -52,16 +52,18 @@ void QFilament::init()
 {
 //    using namespace filament;
 
+    qDebug() << "init";
+
     QSGRendererInterface *rif = m_window->rendererInterface();
     const auto dpr = m_window->effectiveDevicePixelRatio();
     auto winHandle = reinterpret_cast<void *>(m_window->winId());
     auto context = static_cast<void *>(rif->getResource(m_window, QSGRendererInterface::DeviceResource));
 
-    auto m_engine = filament::Engine::create();
+    auto m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, context);
 
-//    if (!fila_engine) {
-//        qDebug() << "fila engine null";
-//    }
+    if (!m_engine) {
+        qDebug() << "fila engine null";
+    }
 }
 
 //}
