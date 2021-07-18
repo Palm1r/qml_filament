@@ -6,6 +6,8 @@ Item {
     height: 640
 
     FilamentItem {
-        anchors.fill: parent
+        width: 400
+        height: 400
+        viewId: 0
     }
 }

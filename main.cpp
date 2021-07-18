@@ -2,8 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QQuickView>
 
-#include "qfilamentitem.h"
 #include "qfilament.h"
+#include "qfilamentitem.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef _WIN32
-    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGLRhi);
 #endif
 
 #ifdef __linux__
@@ -26,7 +26,8 @@ int main(int argc, char *argv[])
     view.setSource(QUrl("qrc:/main.qml"));
     view.show();
 
-    const auto qfilament = QFilament(static_cast<QQuickWindow*>(&view), view.rootObject()->findChildren<QFilamentItem*>());
+    const auto qfilament = QFilament(static_cast<QQuickWindow *>(&view),
+                                     view.rootObject()->findChildren<QFilamentItem *>());
 
     return app.exec();
 }
