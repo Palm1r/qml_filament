@@ -7,7 +7,8 @@
 #include <filament/RenderTarget.h>
 #include <filament/Texture.h>
 #include <filament/View.h>
-
+#include <QOpenGLFramebufferObject>
+#include <memory>
 class QSGFilamentNode : public QSGTextureProvider, public QSGSimpleTextureNode
 {
     Q_OBJECT
@@ -32,6 +33,10 @@ private:
     uint16_t m_viewId{0};
     uint64_t m_frameCount{0};
     void *m_texture{nullptr};
+
+    std::unique_ptr<QOpenGLFramebufferObject> _renderFbo;
+    QOpenGLFramebufferObjectFormat _multiSampleFormat;
+
 };
 
 #endif // QSGFILAMENTNODE_H

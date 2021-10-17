@@ -6,6 +6,13 @@
 #include <utils/EntityManager.h>
 #include <QOpenGLContext>
 
+using namespace QNativeInterface;
+
+//#include <QNativeInterFace
+//#include <QPlatformHeadrt
+//#include <QWGLNativeContext>
+
+
 // namespace QFilament {
 // using namespace filament;
 
@@ -20,12 +27,6 @@ QFilament::QFilament(QQuickWindow *w, const QList<QFilamentItem *> items)
             Qt::DirectConnection);
     // Free standing function instead will always be called from the signal thread
     connect(m_window, &QQuickWindow::afterRenderPassRecording, [this](){
-        qDebug() << "frame";
-        if (!m_engine) {
-            qDebug() << "fila engine null";
-        } else {
-            qDebug() << "fila engine start";
-        }
         if (m_renderer->beginFrame(m_swapChain)) {
             m_renderer->render(m_view);
             m_renderer->endFrame();
@@ -41,13 +42,13 @@ QFilament::QFilament(QQuickWindow *w, const QList<QFilamentItem *> items)
 
 void QFilament::init_example()
 {
-    qDebug() << "init example";
+//    qDebug() << "init example";
 //    m_renderer->setClearOptions({
 //        .clearColor = { 0.0f, 0.13f, 0.0f, 1.0f },
 //        .clear = true
 //    });
 
-//    m_renderer->setClearOptions({{ 0.0f, 0.13f, 0.0f, 1.0f}, true, true});
+    m_renderer->setClearOptions({{ 1.0f, 0.13f, 0.0f, 1.0f}, true, true});
 
 //    if (m_renderer->beginFrame(m_swapChain)) {
 //        m_renderer->render(m_view);
@@ -82,22 +83,23 @@ void QFilament::init_example()
 
 void QFilament::render_example()
 {
+//    qDebug() << "render example";
     for (const auto item : m_items) {
         if (item->viewId() < 256) {
             const auto w = item->dprWidth();
             const auto h = item->dprHeight();
 
-//            m_renderer->setClearOptions({{ 0.0f, 0.13f, 0.0f, 1.0f}, true, true});
+            m_renderer->setClearOptions({{ 1.0f, 0.13f, 0.0f, 1.0f}, true});
 
 //            if (m_renderer->beginFrame(m_swapChain)) {
 //                m_renderer->render(m_view);
 //                m_renderer->endFrame();
 //            }
 
-//            if (m_renderer->beginFrame(m_swapChain)) {
-//                m_renderer->render(m_view);
-//                m_renderer->endFrame();
-//            }
+            if (m_renderer->beginFrame(m_swapChain)) {
+                m_renderer->render(m_view);
+                m_renderer->endFrame();
+            }
         }
     }
 }
@@ -113,7 +115,7 @@ void QFilament::render_example()
 void QFilament::renderFrame()
 {
     m_window->beginExternalCommands();
-    emit render(m_items);
+    emit render();
     m_window->endExternalCommands();
 }
 
@@ -126,17 +128,46 @@ void QFilament::init()
 {
     //    using namespace filament;
 
-    qDebug() << "init";
+//    qDebug() << "init";
 
     QSGRendererInterface *rif = m_window->rendererInterface();
     const auto dpr = m_window->effectiveDevicePixelRatio();
     auto winHandle = reinterpret_cast<void *>(m_window->winId());
-    auto context = static_cast<void *>(
-        rif->getResource(m_window, QSGRendererInterface::DeviceResource));
 
+    auto current = QOpenGLContext::currentContext();
+    current->doneCurrent();
+
+    auto ctx = new QOpenGLContext();
+    ctx->create();
+
+    auto *wglContext = ctx->nativeInterface<QWGLContext>();
+//    auto main_opengl_context = QWGLContext::fromNative(wglContext->nativeContext(), (HWND)m_window->winId());
+
+//    qDebug() << "create engine";
+
+    if (!wglContext) {
+        qDebug() << "shared context is null";
+    }
 #ifdef _WIN32
-    m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, context);
-    m_engine->createSwapChain(winHandle);
+    m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, wglContext->nativeContext());
+
+    if (!m_engine) {
+        qDebug() << "fila engine null";
+    }
+
+   auto native_window = (void*)((HWND)m_window->winId());
+
+   if (!native_window) {
+       qDebug() <<"native window is null";
+   }
+
+//    m_engine->createSwapChain(winHandle);
+   m_swapChain = m_engine->createSwapChain(400,400, 0);
+
+   if (!m_swapChain) {
+       qDebug() <<"m_swapChain is null";
+   }
+
     m_renderer = m_engine->createRenderer();
 #endif
 
@@ -158,21 +189,18 @@ void QFilament::init()
     filament::Renderer *renderer = m_engine->createRenderer();
 #endif
 
-    if (!m_engine) {
-        qDebug() << "fila engine null";
-    } else {
-        qDebug() << "fila engine start";
-    }
 
     m_camera = m_engine->createCamera(utils::EntityManager::get().create());
     m_view = m_engine->createView();
     m_scene = m_engine->createScene();
 
     m_view->setViewport(
-        {0, 0, static_cast<uint32_t>(m_window->width()), static_cast<uint32_t>(m_window->height())});
+        {0, 0, static_cast<uint32_t>(400), static_cast<uint32_t>(400)});
     m_view->setCamera(m_camera);
     m_view->setScene(m_scene);
     m_view->setName("main-view");
+
+    m_renderer->setClearOptions({{ 1.0f, 0.13f, 0.0f, 1.0f}, true});
 
     for (auto item : m_items) {
         item->setFilEngine(m_engine);

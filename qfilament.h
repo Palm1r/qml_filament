@@ -45,7 +45,7 @@ private slots:
     void init();
 
 signals:
-    void render(const std::vector<QFilamentItem *> &);
+    void render();
     void initialized();
 
 private:
