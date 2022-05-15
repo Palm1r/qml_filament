@@ -4,6 +4,8 @@
 
 #include <filament/Engine.h>
 #include <filament/Viewport.h>
+#include <filament/Stream.h>
+
 QSGFilamentNode::QSGFilamentNode(const uint16_t viewId, QQuickItem *item, filament::Engine *engine)
     : m_item(item)
     , m_engine(engine)
@@ -89,8 +91,9 @@ void QSGFilamentNode::sync() {
         m_filaView->setRenderTarget(render_target);
 
         uint32_t tex_col_id = 0;
-        tex_col->getId(*m_engine, (void *)&tex_col_id);
+//        tex_col->getId(*m_engine, (void *)&tex_col_id);
 
+//Texture::Builder& import(intptr_t id) noexcept
         qDebug() << "texture" << tex_col;
 
         QSGTexture *qsgtexture{nullptr};

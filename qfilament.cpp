@@ -140,14 +140,14 @@ void QFilament::init()
     auto ctx = new QOpenGLContext();
     ctx->create();
 
-    auto *wglContext = ctx->nativeInterface<QWGLContext>();
+//    auto *wglContext = ctx->nativeInterface<QWGLContext>();
 //    auto main_opengl_context = QWGLContext::fromNative(wglContext->nativeContext(), (HWND)m_window->winId());
 
 //    qDebug() << "create engine";
 
-    if (!wglContext) {
-        qDebug() << "shared context is null";
-    }
+//    if (!wglContext) {
+//        qDebug() << "shared context is null";
+//    }
 #ifdef _WIN32
     m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, wglContext->nativeContext());
 
@@ -172,7 +172,7 @@ void QFilament::init()
 #endif
 
 #ifdef __linux__
-    auto m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, context);
+    auto m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, ctx);
     filament::SwapChain *swapChain = m_engine->createSwapChain(winHandle);
     filament::Renderer *renderer = m_engine->createRenderer();
 #endif
