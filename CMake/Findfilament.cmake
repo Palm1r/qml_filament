@@ -4,13 +4,13 @@ find_path(
 )
 
 if(NOT filament_FOUND AND filament_ROOT)
-    set(filament_lib filament bluegl bluevk filabridge filaflat utils smol-v)
+    set(filament_lib filament backend bluegl bluevk filabridge filaflat utils smol-v geometry ibl filamat dl pthread c++)
 
     add_library(filament::filament INTERFACE IMPORTED)
 
     foreach(lib IN LISTS filament_lib)
         add_library(${lib} STATIC IMPORTED)
-        find_library(lib_path ${lib} PATHS "$ENV{filament_ROOT}/lib/x86_64")
+        find_library(lib_path ${lib} PATHS "$ENV{filament_ROOT}/lib/x86_64/md")
         message("${lib} ${lib_path}")
         set_target_properties(${lib} PROPERTIES IMPORTED_LOCATION "${lib_path}")
         target_link_libraries(filament::filament INTERFACE ${lib})

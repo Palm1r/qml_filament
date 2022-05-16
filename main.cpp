@@ -2,17 +2,15 @@
 #include <QQmlApplicationEngine>
 #include <QQuickView>
 
-#include <filament/Engine.h>
-//#include "qfilament.h"
-//#include "qfilamentitem.h"
+#include "qfilament.h"
+#include "qfilamentitem.h"
+
 
 int main(int argc, char *argv[])
 {
 //    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
     QGuiApplication app(argc, argv);
-
-
 
 #ifdef __APPLE__
     QQuickWindow::setGraphicsApi(QSGRendererInterface::MetalRhi);
@@ -31,9 +29,8 @@ int main(int argc, char *argv[])
     view.setSource(QUrl(u"qrc:/qmlfilament/main.qml"_qs));
     view.show();
 
-    filament::Engine* engine = filament::Engine::create();
-//    const auto qfilament = QFilament(static_cast<QQuickWindow *>(&view),
-//                                     view.rootObject()->findChildren<QFilamentItem *>());
+    const auto qfilament = QFilament(static_cast<QQuickWindow *>(&view),
+                                     view.rootObject()->findChildren<QFilamentItem *>());
 
     return app.exec();
 }

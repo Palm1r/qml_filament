@@ -14,7 +14,7 @@ class QFilamentItem : public QQuickItem
     Q_OBJECT
     Q_PROPERTY(int viewId READ viewId WRITE setViewId NOTIFY viewIdChanged)
 
-    QML_NAMED_ELEMENT(FilamentItem)
+    QML_ELEMENT
 public:
     QFilamentItem();
     ~QFilamentItem();

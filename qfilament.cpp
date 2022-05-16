@@ -140,77 +140,77 @@ void QFilament::init()
     auto ctx = new QOpenGLContext();
     ctx->create();
 
-//    auto *wglContext = ctx->nativeInterface<QWGLContext>();
-//    auto main_opengl_context = QWGLContext::fromNative(wglContext->nativeContext(), (HWND)m_window->winId());
+    auto *wglContext = ctx->nativeInterface<QWGLContext>();
+    auto main_opengl_context = QWGLContext::fromNative(wglContext->nativeContext(), (HWND)m_window->winId());
 
-//    qDebug() << "create engine";
+    qDebug() << "create engine";
 
-//    if (!wglContext) {
-//        qDebug() << "shared context is null";
+    if (!wglContext) {
+        qDebug() << "shared context is null";
+    }
+//#ifdef _WIN32
+//    m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, wglContext->nativeContext());
+
+//    if (!m_engine) {
+//        qDebug() << "fila engine null";
 //    }
-#ifdef _WIN32
-    m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, wglContext->nativeContext());
 
-    if (!m_engine) {
-        qDebug() << "fila engine null";
-    }
+//   auto native_window = (void*)((HWND)m_window->winId());
 
-   auto native_window = (void*)((HWND)m_window->winId());
+//   if (!native_window) {
+//       qDebug() <<"native window is null";
+//   }
 
-   if (!native_window) {
-       qDebug() <<"native window is null";
-   }
+////    m_engine->createSwapChain(winHandle);
+//   m_swapChain = m_engine->createSwapChain(400,400, 0);
 
-//    m_engine->createSwapChain(winHandle);
-   m_swapChain = m_engine->createSwapChain(400,400, 0);
+//   if (!m_swapChain) {
+//       qDebug() <<"m_swapChain is null";
+//   }
 
-   if (!m_swapChain) {
-       qDebug() <<"m_swapChain is null";
-   }
+//    m_renderer = m_engine->createRenderer();
+//#endif
 
-    m_renderer = m_engine->createRenderer();
-#endif
+//#ifdef __linux__
+//    auto m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, ctx);
+//    filament::SwapChain *swapChain = m_engine->createSwapChain(winHandle);
+//    filament::Renderer *renderer = m_engine->createRenderer();
+//#endif
 
-#ifdef __linux__
-    auto m_engine = filament::Engine::create(filament::backend::Backend::OPENGL, nullptr, ctx);
-    filament::SwapChain *swapChain = m_engine->createSwapChain(winHandle);
-    filament::Renderer *renderer = m_engine->createRenderer();
-#endif
+//#ifdef __APPLE__
+//    init.type = bgfx::RendererType::Metal;
+//    init.platformData.nwh = reinterpret_cast<CAMetalLayer *>(
+//        reinterpret_cast<NSView *>(windowHandler).layer);
+//    init.platformData.context = static_cast<id<MTLDevice>>(context);
 
-#ifdef __APPLE__
-    init.type = bgfx::RendererType::Metal;
-    init.platformData.nwh = reinterpret_cast<CAMetalLayer *>(
-        reinterpret_cast<NSView *>(windowHandler).layer);
-    init.platformData.context = static_cast<id<MTLDevice>>(context);
-
-    auto m_engine = filament::Engine::create(filament::backend::Backend::Metal, nullptr, context);
-    filament::SwapChain *swapChain = m_engine->createSwapChain(
-        reinterpret_cast<CAMetalLayer *>(reinterpret_cast<NSView *>(windowHandler).layer));
-    filament::Renderer *renderer = m_engine->createRenderer();
-#endif
+//    auto m_engine = filament::Engine::create(filament::backend::Backend::Metal, nullptr, context);
+//    filament::SwapChain *swapChain = m_engine->createSwapChain(
+//        reinterpret_cast<CAMetalLayer *>(reinterpret_cast<NSView *>(windowHandler).layer));
+//    filament::Renderer *renderer = m_engine->createRenderer();
+//#endif
 
 
-    m_camera = m_engine->createCamera(utils::EntityManager::get().create());
-    m_view = m_engine->createView();
-    m_scene = m_engine->createScene();
+//    m_camera = m_engine->createCamera(utils::EntityManager::get().create());
+//    m_view = m_engine->createView();
+//    m_scene = m_engine->createScene();
 
-    m_view->setViewport(
-        {0, 0, static_cast<uint32_t>(400), static_cast<uint32_t>(400)});
-    m_view->setCamera(m_camera);
-    m_view->setScene(m_scene);
-    m_view->setName("main-view");
+//    m_view->setViewport(
+//        {0, 0, static_cast<uint32_t>(400), static_cast<uint32_t>(400)});
+//    m_view->setCamera(m_camera);
+//    m_view->setScene(m_scene);
+//    m_view->setName("main-view");
 
-    m_renderer->setClearOptions({{ 1.0f, 0.13f, 0.0f, 1.0f}, true});
+//    m_renderer->setClearOptions({{ 1.0f, 0.13f, 0.0f, 1.0f}, true});
 
-    for (auto item : m_items) {
-        item->setFilEngine(m_engine);
-        item->setFilView(m_view);
-    }
+//    for (auto item : m_items) {
+//        item->setFilEngine(m_engine);
+//        item->setFilView(m_view);
+//    }
 
-    //    // Set up the render view point
-    //    setup_camera();
+//    //    // Set up the render view point
+//    //    setup_camera();
 
-    emit initialized();
+//    emit initialized();
 }
 
 //}
